@@ -10,7 +10,7 @@ different envrionment, with a different combination of operating system and Pico
 SDK installation, is used instead.
 
 These instructions are based on Appendix C of the Raspberry Pi document
-[Getting Started with Raspberry Pi Pico-series](pip-assets.raspberrypi.com/categories/610-raspberry-pi-pico/documents/RP-008276-DS-1-getting-started-with-pico.pdf).
+[Getting Started with Raspberry Pi Pico-series](https://pip-assets.raspberrypi.com/categories/610-raspberry-pi-pico/documents/RP-008276-DS-1-getting-started-with-pico.pdf).
 
 ### Prerequisites
 The following should be accessible through a system package manager.
