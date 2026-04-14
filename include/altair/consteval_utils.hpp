@@ -36,9 +36,20 @@ namespace altair {
 // Primarily used to turn scoped enumerators into their underlying values.
 //
 // Returns a 32-bit unsigned integer representation of `value`.
-template<typename T> requires(std::convertible_to<T, std::uint32_t>)
+template<typename T> requires(requires(T v) {static_cast<std::uint32_t>(v);})
 consteval std::uint32_t to_u32(T value) {
     return static_cast<std::uint32_t>(value);
+}
+
+// to_u8
+//
+// Casts `value` to an equivalent value as an 8-bit unsigned integer.
+// Primarily used to turn scoped enumerators into their underlying values.
+//
+// Returns an 8-bit unsigned integer representation of `value`.
+template<typename T> requires(requires(T v) {static_cast<std::uint8_t>(v);})
+consteval std::uint8_t to_u8(T value) {
+    return static_cast<std::uint8_t>(value);
 }
 
 // make_mask

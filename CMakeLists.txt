@@ -34,7 +34,7 @@ pico_sdk_init()
 
 add_executable(main_fw src/main.cpp)
 
-target_link_libraries(main_fw PRIVATE pico_stdlib)
+target_link_libraries(main_fw PRIVATE pico_stdlib hardware_spi pico_time)
 target_include_directories(main_fw PRIVATE include)
 
 # The Pico's stdio runtime library implementation is used for communicating
