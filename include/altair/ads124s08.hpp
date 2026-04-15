@@ -711,7 +711,7 @@ private:
 // The ADS124S08 ADC on the Sergeant board.
 using SgtAdc = Adc<Pins::STRT1, Pins::DRDY1, Pins::SPI_CS1>;
 
-// SdrADc
+// SdrAdc
 //
 // The ADS124S08 ADC on the Soldier board.
 using SdrAdc = Adc<Pins::STRT2, Pins::DRDY2, Pins::SPI_CS2>;
