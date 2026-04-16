@@ -1,8 +1,8 @@
 /* pins.hpp
  *
  * Identifies the 20 RP2350 GPIO pins corresponding to the 20 wires on the
- * readout boards' system header. The rest of the codebase should be using
- * these definitions instead of hardcoding pin values.
+ * readout boards' system header. Also defines which peripheral(s) are used
+ * and an interface to initialize all the pins appropriately.
  *
  * Copyright (C) 2026 Project ALTAIR
  *
@@ -78,6 +78,13 @@ enum class Pins: std::uint32_t {
 // It determines which subset of pins can be used for SPI_SCLK, SPI_MOSI, and
 // SPI_MISO.
 inline spi_inst_t* const SPI = spi1;
+
+// init_all_pins
+//
+// Initializes every pin this program uses as either simple I/O or as part of
+// the SPI peripheral based on what is needed. Also drives output pins to
+// reasonable initial values.
+void init_all_pins();
 
 } // namespace altair
 

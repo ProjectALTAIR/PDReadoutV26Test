@@ -32,10 +32,11 @@ endif()
 
 pico_sdk_init()
 
-add_executable(main_fw src/main.cpp)
+add_executable(main_fw src/main.cpp src/pins.cpp)
 
 target_link_libraries(main_fw PRIVATE pico_stdlib hardware_spi pico_time)
 target_include_directories(main_fw PRIVATE include)
+target_compile_options(main_fw PRIVATE -Wall -Wextra)
 
 # The Pico's stdio runtime library implementation is used for communicating
 # with the microcontroller from a PC, primarily using the board's USB jack.
