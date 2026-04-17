@@ -32,7 +32,9 @@ endif()
 
 pico_sdk_init()
 
-add_executable(main_fw src/main.cpp src/pins.cpp src/cli.cpp)
+add_executable(main_fw
+    src/main.cpp src/pins.cpp src/cli.cpp src/config_cmd.cpp
+)
 
 target_link_libraries(main_fw PRIVATE pico_stdlib hardware_spi pico_time)
 target_include_directories(main_fw PRIVATE include)

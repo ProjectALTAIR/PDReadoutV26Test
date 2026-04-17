@@ -26,6 +26,7 @@
 #define ALTAIR_PD_CLI_HPP
 
 #include <array>
+#include <cstdint>
 #include <string_view>
 
 namespace altair {
@@ -52,6 +53,12 @@ constexpr std::size_t MAX_ARGC {16};
 // characters written to `cmd` if characters were available.
 std::size_t fetch_cmd(std::array<char, MAX_COMMAND_LENGTH>& cmd);
 
+// ArgVType
+//
+// Convenience type alias for an array of MAX_ARGC string views, used for
+// argument lists here.
+using ArgVType = std::array<std::string_view, MAX_ARGC>;
+
 // split_argv
 //
 // Splits a string view of a command buffer `cmd` into tokens, which are
@@ -64,9 +71,74 @@ std::size_t fetch_cmd(std::array<char, MAX_COMMAND_LENGTH>& cmd);
 //
 // Returns the number of tokens found (always in the range [1, MAX_ARGC]), or 0
 // if `cmd` was completely empty.
-std::size_t split_argv(
-    std::array<std::string_view, MAX_ARGC>& argv, std::string_view cmd
-);
+std::size_t split_argv(ArgVType& argv, std::string_view cmd);
+
+// TargetBoard
+//
+// Command functions taking this as an argument are set up to work with either
+// the Sergeant or Soldier separately, or both simultaneously.
+enum class TargetBoard: std::uint8_t {
+    UNK = 0b00, // Unknown
+    SGT = 0b01, // Sergeant
+    SDR = 0b10, // Soldier
+    BOTH = 0b11 // Both boards
+};
+
+// parse_target
+//
+// Tries to parse the input string as either "sgt", "sdr", or "both".
+//
+// arg: The string view to parse as a target argument.
+//
+// Returns the corresponding TargetBoard enumerator for the argument. All
+// options other than "sgt", "sdr", or "both" parse as TargetBoard::UNK.
+TargetBoard parse_target(std::string_view arg);
+
+// can_use_target
+//
+// Tests if the selected target is suitable for a command that depends on the
+// targeted boards existing.
+//
+// tgt: The target boards for which a command is to be run.
+//
+// sgt_exists: If true, the Sergeant board is assumed to exist.
+//
+// sdr_exists: If true, the Soldier board is assumed to exist.
+//
+// Returns true if, based on the passed flags, a command depending on the
+// targeted boards existing can run.
+bool can_use_target(TargetBoard tgt, bool sgt_exists, bool sdr_exists);
+
+// Command
+//
+// An enum of all the implemented commands.
+enum class Command: std::uint8_t {
+    UNKNOWN = 0, // Unknown
+    RESET,       // Reset one or both ADCs.
+    CONNECT,     // Alias for RESET.
+    HELP,        // Display all commands or get help on a specific command.
+};
+
+// parse_command
+//
+// Tries to parse the input string as one of the recognized commands.
+//
+// arg: The string view to parse as a target argument.
+//
+// Returns the corresponding Command enumerator for the argument. All options
+// other than a valid command (matching its enumerator identifier, but all in
+// lowercase) parse as Command::UNKNOWN.
+Command parse_command(std::string_view arg);
+
+// show_help
+//
+// If argc is 2 and argv[1] parses as a known command, displays a synopsis and
+// description for that command. Otherwise, displays a list of commands with
+// short descriptions.
+//
+// argc: The number of arguments in the list.
+// argv: The list of arguments (including the original command).
+void show_help(std::size_t argc, ArgVType const& argv);
 
 } // namespace altair
 

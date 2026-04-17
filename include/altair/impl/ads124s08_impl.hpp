@@ -24,6 +24,8 @@
 #ifndef ALTAIR_PD_ADS124S08_IMPL_HPP
 #define ALTAIR_PD_ADS124S08_IMPL_HPP
 
+#include <hardware/gpio.h>
+#include <hardware/spi.h>
 #include <pico/time.h>
 
 #include "altair/ads124s08.hpp"
@@ -37,9 +39,15 @@ bool Adc<strt_pin, drdy_pin, cs_pin>::init_adc() {
     // Wait for the ADC to power up.
     sleep_us(DELAY_2p2MS);
 
-    // Reset the ADC with the RESET pin to erase any kind of state it might
-    // already have.
-    reset_adc(true);
+    // Reset the ADC. Old versions of this interface used the RESET pin, but we
+    // share that between the 2 devices, so trying to initialize both would
+    // undo all the configuration on the first initialized device.
+    //
+    // Thus we want to use an SPI reset. To be absolutely sure the device will
+    // respond to the RESET command, we need to be sure it's not in power-down
+    // mode, so we send WAKEUP and then reset it.
+    send_command(Opcode::WAKEUP);
+    reset_adc(false);
 
     // Check the status register to see if the device is ready.
     std::uint8_t status {read_single_register(RegAddr::STATUS)};
